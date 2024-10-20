@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Logs</title>    
+    <link rel="stylesheet" href="purchaselogs.css">
+</head>
+<body>
+
+    <h1>Purchase Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Item ID</th>
+                <th>Quantity</th>
+                <th>Total Cost</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody id="purchase-logs">
+   
+        </tbody>
+    </table>
+
+    <script>
+        const logsTable = document.getElementById('purchase-logs');
+
+        async function fetchPurchaseLogs() {
+            const userId = localStorage.getItem('userId'); 
+            if (!userId) {
+                console.error('User ID not found in local storage.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3001/accounts/purchaselogs/${userId}`);
+                const logs = await response.json();
+
+                logsTable.innerHTML = ''; 
+                logs.forEach(log => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${log.userId}</td>
+                        <td>${log.itemId}</td>
+                        <td>${log.quantity}</td>
+                        <td>${log.totalCost}</td>
+                        <td>${new Date(log.purchaseDate).toLocaleString()}</td>
+                    `;
+                    logsTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching purchase logs:', error);
+            }
+        }
+
+        fetchPurchaseLogs();
+    </script>
+
+</body>
+</html>

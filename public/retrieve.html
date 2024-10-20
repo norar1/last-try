@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="ret.css">
+    <title>Retrieve Accounts</title>
+</head>
+<body>
+    <h1>Retrieve Accounts</h1>
+    <!-- Button para kunin ang mga account -->
+    <button id="retrieveButton">Retrieve Accounts</button>
+    <!-- Div kung saan ipapakita ang resulta -->
+    <div id="results"></div>
+
+    <script>
+        // Nag-aattach ng click event sa button
+        document.getElementById('retrieveButton').onclick = async function() {
+            try {
+                // Kumuha ng data mula sa server
+                const response = await fetch('http://localhost:3001/accounts/retrieve?fields=username,password');
+                // I-convert ang response sa JSON
+                const accounts = await response.json();
+                // Kunin ang results div
+                const resultsDiv = document.getElementById('results');
+                
+                // I-clear ang dating resulta at ipakita ang bagong resulta
+                resultsDiv.innerHTML = accounts.length 
+                    ? accounts.map(account => `<p>${account.username}: ${account.password}</p>`).join('') 
+                    : '<p>No accounts found.</p>'; // Kung walang nahanap
+            } catch (error) {
+                console.error('Error:', error); // I-log ang error sa console
+                // Ipakita ang error message sa results div
+                document.getElementById('results').innerHTML = '<p>Failed to retrieve accounts.</p>';
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Specify character set -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
+    <title>Update Account</title> <!-- Title of the page -->
+    <link rel="stylesheet" href="upd.css">
+    <script>
+        // Function to handle form submission
+        async function updateAccount(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get values from input fields
+            const id = document.getElementById('id').value;
+            const newUsername = document.getElementById('username').value;
+            const newPassword = document.getElementById('password').value;
+
+            // Send a POST request to the API
+            const response = await fetch('http://localhost:3001/accounts/update', {
+                method: 'POST', // Specify the request method
+                headers: {
+                    'Content-Type': 'application/json', // Set content type to JSON
+                },
+                body: JSON.stringify({ id, newUsername, newPassword }), // Convert data to JSON
+            });
+
+            // Parse the JSON response
+            const result = await response.json();
+            // Check if the request was successful
+            if (response.ok) {
+                alert(result.message); // Show success message
+            } else {
+                alert('Error: ' + result.message); // Show error message
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Update Account</h1>
+    <form onsubmit="updateAccount(event)"> <!-- Form with submission handler -->
+        <label for="id">Account ID:</label> <!-- Label for Account ID -->
+        <input type="text" id="id" required> <!-- Input for Account ID -->
+        <br><br>
+
+        <label for="username">New Username:</label> <!-- Label for new username -->
+        <input type="text" id="username" required> <!-- Input for new username -->
+        <br><br>
+
+        <label for="password">New Password:</label> <!-- Label for new password -->
+        <input type="password" id="password" required> <!-- Input for new password -->
+        <br><br>
+
+        <button type="submit">Update</button> <!-- Submit button -->
+    </form>
+</body>
+</html>
